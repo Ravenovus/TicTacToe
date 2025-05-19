@@ -1,0 +1,21 @@
+#grid_container{
+    display: flex;
+    width: 480px;
+    height: 480px;
+    border: 2px solid black;
+    flex-wrap: wrap;
+    margin: 20px auto;
+
+
+}
+
+.block{
+    color: white;
+    border: 1px solid gray;
+}
+
+.symbol{
+    
+    font-size: 48px;
+    color: black;
+}

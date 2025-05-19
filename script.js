@@ -36,13 +36,21 @@ function Player (playerName, sign){
        currentTurn: false,
        init: function(){
         //when dom introduced, have a modal screen pop up and have a form for player one and two and only THEN start game proper
+        this.createGrid();
        },
 
        //spot will be taken from DOM, We will make a grid like we did with the painting app and each block will have an ID, that ID is the spot.
        //on top of that after placing a mark and not ending the game the turn will switch
        //important note!!!!! find a way to deactivate the ability to press a block once it has been used. Instead of adding logic to check whether one was pressed
        // it should be easier to deactivate trackability.
-       placeMark: function(player, spot){
+       placeMark: function(spot){
+        console.log("im trying to place man");
+        if(this.currentTurn){
+            player = this.playerOne;
+        }
+        else{
+            player = this.playerTwo;
+        }
         this.gameBoard[spot] = player.showPlayerSign(); //for front end
         player.addPlacement(spot); //for back end
         if(this.checkWinCondition(player)){
@@ -66,11 +74,39 @@ function Player (playerName, sign){
 
        endGame : function(player){
         console.log(player.showPlayerName() + " won!");
+       },
+
+       createGrid : function(){
+        const blockSize =  158;
+
+        let grid = document.querySelector("#grid_container");
+        for(let i=0;i<9;i++){
+            let block = document.createElement("div");
+            let symbol = document.createElement("p");
+            symbol.classList.add("symbol");
+            block.classList.add("block");
+            block.id = i;
+            block.style.width = `${blockSize}px`;
+            block.style.height = `${blockSize}px`;
+            block.appendChild(symbol);
+            //add the click function here, but also a callback to deactivate it
+            block.addEventListener(("click"), () => this.placeMark(block.id),{ once: true });
+            block.addEventListener(("click"), () => this.writeMark(block, block.id), {once:true});
+            grid.appendChild(block);
+        }
+
+       },
+
+       writeMark: function(block, id){
+            console.log("im trying to write man");
+            symbol = block.firstChild;
+            symbol.innerHTML = this.gameBoard[id];
        }
-
-
        
         
+       
+    } 
 
-    }
+    game.init();
+
 })()
