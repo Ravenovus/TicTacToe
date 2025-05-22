@@ -39,12 +39,7 @@ function Player (playerName, sign){
         this.createGrid();
        },
 
-       //spot will be taken from DOM, We will make a grid like we did with the painting app and each block will have an ID, that ID is the spot.
-       //on top of that after placing a mark and not ending the game the turn will switch
-       //important note!!!!! find a way to deactivate the ability to press a block once it has been used. Instead of adding logic to check whether one was pressed
-       // it should be easier to deactivate trackability.
        placeMark: function(spot){
-        console.log("im trying to place man");
         if(this.currentTurn){
             player = this.playerOne;
         }
@@ -54,7 +49,7 @@ function Player (playerName, sign){
         this.gameBoard[spot] = player.showPlayerSign(); //for front end
         player.addPlacement(spot); //for back end
         if(this.checkWinCondition(player)){
-            endGame(player);
+            this.endGame(player);
         }
         this.currentTurn = !this.currentTurn;
        },
@@ -62,14 +57,14 @@ function Player (playerName, sign){
        checkWinCondition: function(player){
         placementsToCheck = player.showPlacements();
         let victory = false;
-
         //checking for every condition
-        if(placementsToCheck.includes(0,1,2) || placementsToCheck.includes(3,4,5)|| placementsToCheck.includes(6,7,8) ||
-            placementsToCheck.includes(0,3,6) || placementsToCheck.includes(1,4,7) || placementsToCheck.includes(2,5,8) ||
-            placementsToCheck.includes(0,4,8) || placementsToCheck.includes(2,4,6)){
+        if(this.checkArray(placementsToCheck,["0","1",'2']) || this.checkArray(placementsToCheck,['3','4','5'])|| this.checkArray(placementsToCheck,['6','7','8']) ||
+            this.checkArray(placementsToCheck,['0','3','6']) || this.checkArray(placementsToCheck,['1','4','7']) || this.checkArray(placementsToCheck,['2','5','8']) ||
+            this.checkArray(placementsToCheck,['0','4','8']) || this.checkArray(placementsToCheck,['2','4','6'])){
+
                 victory = true;
             }
-            return victory;
+        return victory;
        },
 
        endGame : function(player){
@@ -89,7 +84,6 @@ function Player (playerName, sign){
             block.style.width = `${blockSize}px`;
             block.style.height = `${blockSize}px`;
             block.appendChild(symbol);
-            //add the click function here, but also a callback to deactivate it
             block.addEventListener(("click"), () => this.placeMark(block.id),{ once: true });
             block.addEventListener(("click"), () => this.writeMark(block, block.id), {once:true});
             grid.appendChild(block);
@@ -98,12 +92,15 @@ function Player (playerName, sign){
        },
 
        writeMark: function(block, id){
-            console.log("im trying to write man");
             symbol = block.firstChild;
             symbol.innerHTML = this.gameBoard[id];
-       }
+       },
        
-        
+       checkArray: function(array_b, array_a){
+        let success = array_a.every(function(val) {
+        return array_b.indexOf(val) !== -1;});
+        return success;
+       }
        
     } 
 
